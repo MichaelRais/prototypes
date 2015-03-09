@@ -1,7 +1,7 @@
 /* 
 	Spark framework integration testing.
 	Still filling in tests and comments
-	NOTE:  See Atlassian "Clover" product - useful.
+	NOTE:  See Atlassian "Clover" product - useful for code coverage.
 */
 
 	
@@ -43,18 +43,11 @@ public class CountriesTest {
 		Spark.stop(); // stops embedded server
 	}	
 
-	/* @After
-    public void clearCountries() {
-        Countries.clear();
-    } */
-
 	@Test
 	public void testCountriesLoadUS() {
 		TestResponse res = request("GET", "/load/US/America");
-		//Map<String, String> json = res.json();  // This won't work until response is json
 		assertEquals(201, res.status);
 		assertEquals("US", res.body);
-		//assertEquals("US", json.get("name"));
 	}
 
 	@Test
