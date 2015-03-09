@@ -35,9 +35,7 @@ import com.google.gson.JsonArray;
 public class Countries {
 
     /*
-     * Map holding the countrys
-     * HASHMAP TUTORIAL:  http://java67.blogspot.com/2013/02/10-examples-of-hashmap-in-java-programming-tutorial.html
-     * IMPORTANT: A hashmap is internally A) search on hash B) Then search on key if dupes, so hashing is handled natively to the datatype.  
+     * Map holding the countries is "country"
      */
     private static Map<String, String> country = new HashMap<String, String>();
     
@@ -58,14 +56,10 @@ public class Countries {
         // Creates a new country resource, will return the ID to the created resource
         // Code is sent as query parameters e.g. /countries/${code}/${name}
         Spark.get("/load/:code/:name", (req, res) -> {
-            //Random random = new Random();
 
             String code = req.params(":code");
-            String name = req.params(":name");
-
+            String name = req.params(":name")
             country.put(code, name);
-            //int id = random.nextInt(Integer.MAX_VALUE);
-            //country.put(String.valueOf(id), code);
 
             res.status(201); // 201 Created
             return code;
