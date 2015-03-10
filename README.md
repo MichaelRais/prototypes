@@ -12,17 +12,16 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 #Requirements
 <ul>
 <li>Java
-<li>Maven:  Dependencies are in the project object model (pom.xml) file.
 <li>Spark v2.1
-<li>JUnit 
+<li>Maven:  Dependencies are in the project object model file.   (e.g. You'll see JUnit and Gson listed in the pom.xml.)
 </ul>
 
 #Demo Summary
 <ul>
 <li>mvn package
 <li>mvn exec:java -Dexec.mainClass=router1.Countries
-<li>http://0.0.0.0:4567/
-<li>http://0.0.0.0:4567/initload/
-<li>http://0.0.0.0:4567/get/IO
-<li>http://0.0.0.0:4567/get/US
+<li>0.0.0.0:4567
+<li>0.0.0.0:4567/initload/
+<li>0.0.0.0:4567/get/IO
+<li>0.0.0.0:4567/get/US
 </ul>
