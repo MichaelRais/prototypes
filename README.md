@@ -11,10 +11,10 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 
 #Requirements
 <ul>
-<i>Java
-<i>Maven:  Dependencies are in the project object model (pom.xml) file.
-<i>Spark v2.1
-<i>JUnit 
+<li>Java
+<li>Maven:  Dependencies are in the project object model (pom.xml) file.
+<li>Spark v2.1
+<li>JUnit 
 </ul>
 
 #Demo Summary
