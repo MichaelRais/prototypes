@@ -11,7 +11,7 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 
 #Requirements
 <ul>
-<li>Java
+<li>Java 8
 <li>Spark v2.1
 <li>Maven:  Dependencies are in the project object model file.   (e.g. You'll see JUnit and Gson listed in the pom.xml.)
 </ul>
