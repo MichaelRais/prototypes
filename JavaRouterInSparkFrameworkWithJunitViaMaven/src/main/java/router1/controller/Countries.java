@@ -37,17 +37,16 @@ public class Countries {
     /*
      * Map holding the countries is "country"
      */
-    //private static Map<String, String> country = new HashMap<String, String>();
+    private static Map<String, String> country = new HashMap<String, String>();
     
     public static void main(String[] args) {
-        Map<String, String> country = new HashMap<String, String>();
-        Map<String, String> countryJSON = new HashMap<String, String>();
 
         // Gets a country resource.  Returns the code:name
+        // Resource is requested by query parameters e.g. (/get/${code})
         Spark.get("/get/:code", (req, res) -> {
             String code = req.params(":code");
             String name = country.get(code);
-            //Map<String, String> countryJSON = new HashMap<String, String>();
+            Map<String, String> countryJSON = new HashMap<String, String>();
 
             countryJSON.put(code, name); 
             JsonTransformer jsonXFormer = new JsonTransformer(); 
@@ -56,21 +55,22 @@ public class Countries {
             return jsonXFormer.render(countryJSON);
         });
 
-        // Creates a new country resource.  Return the code:name
-        // Code is sent as query parameters e.g. /countries/${code}/${name}
+        // Creates a new country resource.  Allows for individual records to load.  Return the code:name
+        // Resource is sent as query parameters e.g. /load/${code}/${name}
         Spark.get("/load/:code/:name", (req, res) -> {
             String code = req.params(":code");
             String name = req.params(":name");
-            country.put(code, name);
+            Map<String, String> countryJSON = new HashMap<String, String>();
 
-            countryJSON.put(code, name); 
+            country.put(code, name); //additive
+            countryJSON.put(code, name);  //individual record
             JsonTransformer jsonXFormer = new JsonTransformer(); 
 
             res.status(201); // 201 Created
             return jsonXFormer.render(countryJSON);
         });
 
-        // Gets all available codes and countries.
+        // Gets all available (loaded) codes and countries.
         Spark.get("/codescountries", (req, res) -> {
                 /* String ids = "";
                 for (String id : country.keySet()) {
