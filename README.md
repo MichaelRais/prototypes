@@ -21,7 +21,8 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 <li>mvn package
 <li>mvn exec:java -Dexec.mainClass=router1.Countries
 <li>0.0.0.0:4567
-<li>0.0.0.0:4567/initload/
+<li>0.0.0.0:4567/initload
 <li>0.0.0.0:4567/get/IO
 <li>0.0.0.0:4567/get/US
+<li>...and so on...
 </ul>
