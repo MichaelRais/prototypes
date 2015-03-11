@@ -6,10 +6,10 @@
     Already convinced SparkJava is awesome - http://sparkjava.com
 
     ToDo;
-        *)  All responses must be ReST
-        *)  Finish up more J-Unit tests
-        *)  Confirm structure / Finish cleaning up
-        *)  POM.xml needs update - remove unused references
+        *)  Confirm structure 
+        *)  Finish up more JUnit tests
+        *)  Handle content-type/URLencoding.
+        *)  POM.xml needs update - remove unused reference
         *)  Package into Jar
 */
 
@@ -37,46 +37,56 @@ public class Countries {
     /*
      * Map holding the countries is "country"
      */
-    private static Map<String, String> country = new HashMap<String, String>();
+    //private static Map<String, String> country = new HashMap<String, String>();
     
     public static void main(String[] args) {
-        
+        Map<String, String> country = new HashMap<String, String>();
+        Map<String, String> countryJSON = new HashMap<String, String>();
+
+        // Gets a country resource.  Returns the code:name
         Spark.get("/get/:code", (req, res) -> {
             String code = req.params(":code");
             String name = country.get(code);
-            Map<String, String> countryJSON = new HashMap<String, String>();
+            //Map<String, String> countryJSON = new HashMap<String, String>();
 
             countryJSON.put(code, name); 
-            JsonTransformer jsonXFormer = new JsonTransformer();
-            //return jsonXFormer.render("{Country: " + name + "}");  //no point unless you pass back an obj - just an excercise.
+            JsonTransformer jsonXFormer = new JsonTransformer(); 
+
             res.status(200); // 200 OK
             return jsonXFormer.render(countryJSON);
         });
 
-        // Creates a new country resource, will return the ID to the created resource
+        // Creates a new country resource.  Return the code:name
         // Code is sent as query parameters e.g. /countries/${code}/${name}
         Spark.get("/load/:code/:name", (req, res) -> {
-
             String code = req.params(":code");
-            String name = req.params(":name")
+            String name = req.params(":name");
             country.put(code, name);
 
+            countryJSON.put(code, name); 
+            JsonTransformer jsonXFormer = new JsonTransformer(); 
+
             res.status(201); // 201 Created
-            return code;
+            return jsonXFormer.render(countryJSON);
         });
 
-        // Gets all available country resources (id's)
-        Spark.get("/countrycodes", (req, res) -> {
-                String ids = "";
+        // Gets all available codes and countries.
+        Spark.get("/codescountries", (req, res) -> {
+                /* String ids = "";
                 for (String id : country.keySet()) {
                    ids += id + ", "; 
                 }
                 if (ids.length()  > 0 )
                     ids = ids.substring(0,ids.length()-2);
-                return ids;
+                return ids; */
+            JsonTransformer jsonXFormer = new JsonTransformer();            
+            res.status(200); // 200 OK
+            return jsonXFormer.render(country);
+
         });
 
-        Spark.get("/initload/", (req, res) -> {
+        // Initialize microservice by loading in full data model.
+        Spark.get("/initload", (req, res) -> {
             JsonObject jsonObjCountry = new JsonObject();
             JsonObject jsonObject = new JsonObject();
             jsonObject = JsonRead.convertFileToJSON ("src/main/java/router1/model/resources/json/codeCountries.json");
@@ -86,9 +96,10 @@ public class Countries {
                     jsonObjCountry =  je.getAsJsonObject();
                     country.put(jsonObjCountry.get("code").getAsString(), jsonObjCountry.get("country").getAsString());
                 }
-            return "Loaded";
+            return "{\"Status\":\"Loaded\"}";
         });
 
+        // Handle unexpected request strings
         Spark.exception(IllegalArgumentException.class, (e, request, response) -> {
             // works because it's an existing type of exception - doesn't need to get "thrown" - triggered by exception.
             response.status(404);
