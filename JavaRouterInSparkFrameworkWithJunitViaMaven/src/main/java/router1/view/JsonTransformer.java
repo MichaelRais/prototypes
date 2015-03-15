@@ -1,7 +1,7 @@
 /*
-Supporting class for Gson
+PURPOSE:        Supporting class for Gson
+                See "CountryRouter.java"for all comments, work history, todo, etc.
 */
-
 
 package router1;
 
@@ -11,8 +11,7 @@ import spark.*;
 import com.google.gson.Gson;
 
 
-// Not used until "/helloJSON" works
-public class JsonTransformer implements ResponseTransformer {
+class JsonTransformer implements ResponseTransformer {
 
     private Gson gson = new Gson();
 

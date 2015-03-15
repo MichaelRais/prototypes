@@ -1,9 +1,11 @@
 /*
+PURPOSE:        Access object for data structure.  Loads data.
+                See "CountryRouter.java"for all comments, work history, todo, etc.
+
 
   REF:  http://blog.sodhanalibrary.com/2014/04/read-json-with-java-using-google-json.html#.VPu4T977X-k
         http://stackoverflow.com/questions/5863870/how-should-a-model-be-structured-in-mvc
 */
-
 
 package router1;
 
@@ -17,7 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
-//import com.google.gson.stream.JsonReader;  //Note:  Reader is for performanc use-case not applicable here
+//import com.google.gson.stream.JsonReader;  //Note:  Reader is for performance use-case not applicable here
 
 // For printJson Method
 import java.io.StringReader;
@@ -25,19 +27,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 
-public class JsonRead {
-    public static void main(String[] args) {
-          // No need for constructor - just best to declare
+class JsonRead {
 
-          //String internalPath = System.getProperty("user.dir");
-          //System.out.println("Internal Path: " + internalPath);
-
-          // Example call
-          // convertFileToJSON ("src/main/java/router1/resources/json/codeCountries.json");
-        
-    }
-
-    public static JsonObject convertFileToJSON (String fileName) {
+    static JsonObject convertFileToJSON (String fileName) {
         //Load file
         JsonObject jsonObject = new JsonObject();
         JsonParser parser = new JsonParser();
@@ -46,11 +38,9 @@ public class JsonRead {
           JsonElement jsonElement = parser.parse(new FileReader(fileName));
           jsonObject = jsonElement.getAsJsonObject();
         } catch (FileNotFoundException e) {
-
-
+            //No action
         } catch (IOException e) {
-
-
+            //No action
         }
 
         JsonArray data = jsonObject.getAsJsonArray("countries");

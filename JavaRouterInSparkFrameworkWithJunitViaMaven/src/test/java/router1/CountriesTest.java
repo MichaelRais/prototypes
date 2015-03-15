@@ -1,10 +1,14 @@
 /* 
-	Spark framework integration testing.
-	Still filling in tests and comments
-	NOTE:  See Atlassian "Clover" product - useful for code coverage.
+PURPOSE:        JUnit 4.11 integration and unit testing.
+					*) These specific tests are Spark framework integration testing.   
+                See "CountryRouter.java"for all comments, work history, todo, etc.
+
+AUTHOR:         M. Rais
+
+NOTES:          Still filling in tests and comments
+					+) See Atlassian "Clover" product - useful for code coverage.
 */
 
-	
 package router1;
 
 import spark.Spark;
@@ -25,11 +29,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class CountriesTest {
 	
 	@BeforeClass
 	public static void setup() {
-		Countries.main(null);  // starting application per framework
+		CountryRouter.main(null);  // starting application per framework
 		try {
             Thread.sleep(3000); // seems a slight delay is needed or assertions run/fail before server up.
         } catch (Exception e) {
@@ -42,24 +47,38 @@ public class CountriesTest {
 	}	
 
 	@Test
-	public void testCountriesLoadUS() {
-		TestResponse res = request("GET", "/load/US/America");
+	public void testCountriesLoadUSreturnsResults() {
+		TestResponse res = request("GET", "/v0/load/US/America");
+		//TestResponse res = request("PUT", "/v0/load/US/America");  // See comments in router file as to why I didn't go use PUT/POST, etc in prototype.
 		assertEquals(201, res.status);
 	}
 
 	@Test
-	public void testCountriesLoadFR() {
-		TestResponse res = request("GET", "/load/FR/France");
+	public void testCountriesLoadFRreturnsResults() {
+		TestResponse res = request("GET", "/v0/load/FR/France");
 		assertEquals(201, res.status);
 	}
 
 	@Test
-	public void testCountriesGetFR() {
-		// TestResponse res = request("GET", "/load/FR/France"); // Have to load the data - there is probably a better way
-		TestResponse res = request("GET", "/get/FR"); // passed once and then failed - issue with test.
+	public void testCountriesLoadITreturnsResults() {
+		TestResponse res = request("GET", "/v0/load/IT/Italy");
+		assertEquals(201, res.status);
+	}
+
+	@Test
+	public void testCountriesDeleteITreturnsResults() {
+		TestResponse res = request("GET", "/v0/delete/IT");
+		assertEquals(200, res.status);
+		assertTrue(res.body.contains("\"Status\":\"Deleted\"")); // Could be more specific - fails with dump unlike other assert errs.
+	}
+
+	@Test
+	public void testCountriesGetFRreturnsResults() {
+		TestResponse res = request("GET", "/v0/load/FR/France"); // Have to load the data - there is probably a better way
+		res = request("GET", "/v0/get/FR"); // After data loaded, then get it.
 		//Map<String, String> json = res.json();
 		assertEquals(200, res.status);
- 		// assertEquals("France", json.get("FR")); // passed once and then failed since then.
+ 		assertTrue(res.body.contains("\"FR\":\"France\"")); // Could be more specific - fails with dump unlike other assert errs.
 	} 
 
 

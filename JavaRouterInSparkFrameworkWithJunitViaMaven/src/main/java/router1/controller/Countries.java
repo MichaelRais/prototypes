@@ -1,18 +1,9 @@
 /* 
-    A simple RESTful prototype of a microservice built in Spark framework, 
-    using J-Unit in Maven via Surefire plug-in.
-    Still filling in comments, and sanding rough edges.  
+PURPOSE:        Controller object.
+                See "CountryRouter.java"for all comments, work history, todo, etc.
 
-    Already convinced SparkJava is awesome - http://sparkjava.com
-
-    ToDo;
-        *)  Confirm structure 
-        *)  Finish up more JUnit tests
-        *)  Handle content-type/URLencoding.
-        *)  POM.xml needs update - remove unused reference
-        *)  Package into Jar
+AUTHOR:         M. Rais
 */
-
 
 package router1;
 
@@ -29,82 +20,79 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
 
 
-/**
- * A simple RESTful example showing howto create, get, update and delete country resources.
- */
-public class Countries {
+class Countries { 
 
-    /*
-     * Map holding the countries is "country"
-     */
+    // Map holding the countries is "country"
     private static Map<String, String> country = new HashMap<String, String>();
     
-    public static void main(String[] args) {
+    // For a non-prototype, initLoad could be handled in the "Country()" constructor executed once on instantiation.
+    static String initLoad(Request req, Response res) {
+        JsonObject jsonObjCountry = new JsonObject();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject = Model.getDataStructure();
 
-        // Gets a country resource.  Returns the code:name
-        // Resource is requested by query parameters e.g. (/get/${code})
-        Spark.get("/get/:code", (req, res) -> {
-            String code = req.params(":code");
-            String name = country.get(code);
-            Map<String, String> countryJSON = new HashMap<String, String>();
+        JsonArray data = jsonObject.getAsJsonArray("countries");
+            for (JsonElement je : data) {
+                jsonObjCountry =  je.getAsJsonObject();
+                country.put(jsonObjCountry.get("code").getAsString(), jsonObjCountry.get("country").getAsString());
+            }
+        res.status(201); // 201 Created
+        return "{\"Status\":\"Loaded\"}";
+    }  
 
-            countryJSON.put(code, name); 
-            JsonTransformer jsonXFormer = new JsonTransformer(); 
+    static String getCountryFromCode(Request req, Response res) {
+        String code = req.params(":code");
+        String name = country.get(code);
+        Map<String, String> countryJSON = new HashMap<String, String>();
 
-            res.status(200); // 200 OK
-            return jsonXFormer.render(countryJSON);
-        });
+        countryJSON.put(code, name); 
+        JsonTransformer jsonXFormer = new JsonTransformer(); 
 
-        // Creates a new country resource.  Allows for individual records to load.  Return the code:name
-        // Resource is sent as query parameters e.g. /load/${code}/${name}
-        Spark.get("/load/:code/:name", (req, res) -> {
-            String code = req.params(":code");
-            String name = req.params(":name");
-            Map<String, String> countryJSON = new HashMap<String, String>();
-
-            country.put(code, name); //additive
-            countryJSON.put(code, name);  //individual record
-            JsonTransformer jsonXFormer = new JsonTransformer(); 
-
-            res.status(201); // 201 Created
-            return jsonXFormer.render(countryJSON);
-        });
-
-        // Gets all available (loaded) codes and countries.
-        Spark.get("/codescountries", (req, res) -> {
-                /* String ids = "";
-                for (String id : country.keySet()) {
-                   ids += id + ", "; 
-                }
-                if (ids.length()  > 0 )
-                    ids = ids.substring(0,ids.length()-2);
-                return ids; */
-            JsonTransformer jsonXFormer = new JsonTransformer();            
-            res.status(200); // 200 OK
-            return jsonXFormer.render(country);
-
-        });
-
-        // Initialize microservice by loading in full data model.
-        Spark.get("/initload", (req, res) -> {
-            JsonObject jsonObjCountry = new JsonObject();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject = JsonRead.convertFileToJSON ("src/main/java/router1/model/resources/json/codeCountries.json");
-            
-            JsonArray data = jsonObject.getAsJsonArray("countries");
-                for (JsonElement je : data) {
-                    jsonObjCountry =  je.getAsJsonObject();
-                    country.put(jsonObjCountry.get("code").getAsString(), jsonObjCountry.get("country").getAsString());
-                }
-            return "{\"Status\":\"Loaded\"}";
-        });
-
-        // Handle unexpected request strings
-        Spark.exception(IllegalArgumentException.class, (e, request, response) -> {
-            // works because it's an existing type of exception - doesn't need to get "thrown" - triggered by exception.
-            response.status(404);
-            response.body("Resource not found");
-        });   
-        
+        res.status(200); // 200 OK
+        return jsonXFormer.render(countryJSON);
     }
+
+    static String setCountryFromCode(Request req, Response res) {
+        String code = req.params(":code");
+        String name = req.params(":name");
+        Map<String, String> countryJSON = new HashMap<String, String>();
+
+        country.put(code, name); //additive
+        countryJSON.put(code, name);  //individual record
+        JsonTransformer jsonXFormer = new JsonTransformer(); 
+
+        res.status(201); // 201 Created
+        return jsonXFormer.render(countryJSON);
+    }
+
+    static String deleteCodeCountry(Request req, Response res) {
+        String code = req.params(":code");
+        String returnJSON;
+        
+        if (country.get(code) != null) {
+            country.remove(code);
+            res.status(200); // OK.
+            returnJSON = "{\"Status\":\"Deleted\"}";
+        } else {
+            res.status(417); // Expectation failed.
+            returnJSON = "{\"Status\":\"Not Found\"}";
+        }
+
+        return returnJSON;
+    }
+
+    static String getCodesCountries(Request req, Response res) {
+            /* String ids = "";
+            for (String id : country.keySet()) {
+               ids += id + ", "; 
+            }
+            if (ids.length()  > 0 )
+                ids = ids.substring(0,ids.length()-2);
+            return ids; */
+        JsonTransformer jsonXFormer = new JsonTransformer();            
+        res.status(200); // 200 OK
+        return jsonXFormer.render(country);
+    }
+
 }
+
