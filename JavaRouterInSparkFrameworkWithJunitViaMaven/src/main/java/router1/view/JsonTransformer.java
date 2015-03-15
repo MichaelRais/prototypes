@@ -1,5 +1,5 @@
 /*
-PURPOSE:        Supporting class for Gson
+PURPOSE:        Supporting class using Gson, which generates JSON "view" on data structure.
                 See "CountryRouter.java"for all comments, work history, todo, etc.
 */
 
