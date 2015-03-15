@@ -4,8 +4,8 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 # Java microservice prototype in Spark framework with JUnit via Maven
 <ul>
 <li>A simple RESTful prototype of a microservice built in Spark framework, using JUnit in Maven via the Surefire plug-in.
-<li>The prototype itself loads and serves country code lookups.  If you have Maven installed and download the source, you can run the prototype per the demo summary below.
-<li>I'm still sanding rough edges in this <i>functioning</i> prototype.   Documentation just got started.
+<li>This is a <i>functioning</i> prototype. The prototype itself loads and serves country code lookups.  
+<li>If you have Maven installed and download the source, you can run the prototype per the demo summary below.
 <li>I'm now a fan of the Spark Java framework for microservices:  http://sparkjava.com
 </ul>
 
@@ -19,10 +19,16 @@ The "prototypes_frameworks" area is for any prototypes built in a framework.
 #Demo Summary
 <ul>
 <li>mvn package
-<li>mvn exec:java -Dexec.mainClass=router1.Countries
+<li>mvn exec:java -Dexec.mainClass=router1.CountryRouter
 <li>0.0.0.0:4567
-<li>0.0.0.0:4567/initload
-<li>0.0.0.0:4567/get/IO
-<li>0.0.0.0:4567/get/US
+<li>0.0.0.0:4567/v0/load/IT/Italy
+<li>0.0.0.0:4567/v0/load/FR/France
+<li>0.0.0.0:4567/v0/codescountries
+<li>0.0.0.0:4567/v0/delete/FR
+<li>0.0.0.0:4567/v0/codescountries
+<li>0.0.0.0:4567/v0/initload
+<li>0.0.0.0:4567/v0/get/IO
+<li>0.0.0.0:4567/v0/get/US
+<li>0.0.0.0:4567/v0/codescountries
 <li>...and so on...
 </ul>
